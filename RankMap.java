@@ -12,7 +12,7 @@ public class RankMap {
 	public static HashMap<Integer,String> rankMap = new HashMap<Integer,String>();
 	
 	// constructor
-	public RankMap(int suitValue) {
+	public RankMap() {
 		rankMap.put(0, "Ace");
 		rankMap.put(1, "Two");
 		rankMap.put(2, "Three");
@@ -29,7 +29,7 @@ public class RankMap {
 	}
 	
 	// methods
-	public static String getString(int value) {
+	public String getString(int value) {
 		return rankMap.get(value);
 	}
 }

@@ -47,6 +47,7 @@ public class CardGame_View extends JFrame {
 		Container contents = gamePanel;
 		contents.setBackground(new Color(40,102,10));
 		this.getContentPane().add(contents);
+		//this.setVisible(true);
 	}
 	
 	// actions

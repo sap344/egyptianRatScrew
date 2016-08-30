@@ -12,7 +12,7 @@ public class SuitMap {
 	public static HashMap<Integer,String> suitMap = new HashMap<Integer,String>();
 	
 	// constructor
-	public SuitMap(int rankValue) {
+	public SuitMap() {
 		suitMap.put(0, "Spades");
 		suitMap.put(1, "Clubs");
 		suitMap.put(2, "Diamonds");
@@ -20,7 +20,7 @@ public class SuitMap {
 	}
 	
 	// methods
-	public static String getString(int value) {
+	public String getString(int value) {
 		return suitMap.get(value);
 	}
 }

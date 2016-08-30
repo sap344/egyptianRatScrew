@@ -9,29 +9,33 @@ import java.util.*;
 public class Deck {
 
     // properties
-    private List<Card> cards;
-    int NumOfCards;
+    private final List<Card> cards;
+    private int NumOfCards;
 
     // constructor
     public Deck(int numOfCards) {
     	if (numOfCards != 0)
     	{
     		NumOfCards = numOfCards - 1; // to account for the 0 in the beginning
+	    	this.cards = new ArrayList<Card>(52);
+	    	// add 52 cards to the deck
+	    	if (NumOfCards == 51)
+	    	{
+		        for (int s=0; s<=3; s++)
+		        {
+		        	for (int r=0; r<=12; r++)
+		            {
+		        	   Card addThisCard = new Card(s,r);
+		               this.cards.add(addThisCard);
+		            }
+		        }
+	    	}
     	}
-    	
-    	// start an empty deck
-    	cards = new ArrayList<Card>(Collections.nCopies(52, null));
-    	
-    	// add 52 cards to the deck
-    	if (NumOfCards == 51)
+    	else
     	{
-	        for (int s=0; s<=3; s++)
-	        {
-	        	for (int r=0; r<=12; r++)
-	            {
-	               cards.add(new Card(s,r));
-	            }
-	        }
+    		// start an empty deck
+    		this.cards = new ArrayList<Card>(52);
+    		NumOfCards = 0;
     	}
     }
     
@@ -40,28 +44,45 @@ public class Deck {
     	// get a random card
     	Random random = new Random();
         int index=0;
-
+        
         do {
-            index = random.nextInt();
-        } while (cards.get(index) == null);
+            index = random.nextInt(NumOfCards);
+        } while (this.cards.get(index) == null);
 
         // take the random card out of the deck
-        Card drawThis = cards.get(index);
-        cards.set(index, null);
+        Card drawThis = this.cards.get(index);
+        this.cards.set(index, null);
         NumOfCards = NumOfCards - 1;
         return drawThis;
     }
     
-    public void PutCardInDeck(Card putThisBack) {
+    public void PutCardInDeck(Card putThisInDeck) {
     	Random random = new Random();
     	int index = 0;
     	
     	do {
-    		index = random.nextInt(NumOfCards);
+    		index = random.nextInt(this.GetNumberOfCardsInDeck_arrayCount());
     	} while(cards.get(index) != null);
     	
     	// put the card back into a random place in the deck, where there was a null spot
-    	cards.set(index, putThisBack);
+    	this.cards.set(index, putThisInDeck);
     	NumOfCards = NumOfCards + 1;
     }
+    
+    public void AddToNewDeck(Card addThisCard) {
+    	this.cards.add(addThisCard);
+    	NumOfCards = NumOfCards + 1;
+    }
+    
+    public int GetNumberOfCardsInDeck() {
+    	return NumOfCards;
+    }
+    
+    public int GetNumberOfCardsInDeck_arrayCount() {
+    	return cards.size();
+    }
+    
+	void p(String printThis) {
+		System.out.println(printThis);
+	}
 }

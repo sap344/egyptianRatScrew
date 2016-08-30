@@ -4,16 +4,19 @@
 * CS338:GUI, Project 3 - Egyptian Rat Screw Card Game
 */
 
-public class Card {
+public final class Card {
 
 	// properties
-	private static int Suit;
-	private static int Rank;
+	private final int Suit;
+	private final int Rank;
+	private SuitMap suitMap = new SuitMap();
+	private RankMap rankMap = new RankMap();
+	
 	
 	// constructor
 	public Card (int suit, int rank) {
-		this.setSuit(suit);
-		this.setRank(rank);
+		this.Suit = suit;
+		this.Rank = rank;
 	}
 	
 	// methods
@@ -27,21 +30,21 @@ public class Card {
 	}
 	
 	public String getRankString() {
-		return RankMap.getString(Card.Rank);
+		return rankMap.getString(this.Rank);
 	}
 	
 	public String getSuitString() {
-		return SuitMap.getString(Card.Suit);
+		return suitMap.getString(this.Suit);
 	}
 	
 	public String getCardString() {
-		String cardString = RankMap.getString(Card.Rank) + " of " + SuitMap.getString(Card.Suit);
+		String cardString = rankMap.getString(this.Rank) + " of " + suitMap.getString(this.Suit);
 		return cardString;
 	}
 	
 	public String getCardImageFile() {
-		String cardKey = String.valueOf(Card.Rank);
-		switch(Card.Suit) {
+		String cardKey = String.valueOf(this.Rank);
+		switch(this.Suit) {
 			case 0 : cardKey.concat("s.gif");
 					 break;
 			case 1 : cardKey.concat("c.gif");
@@ -55,14 +58,5 @@ public class Card {
 		}
 		
 		return cardKey;
-	}
-	
-	// --setters
-	private void setRank(int rank) {
-		Card.Rank = rank;
-	}
-	
-	private void setSuit(int suit) {
-		Card.Suit = suit;
 	}
 }

@@ -27,14 +27,15 @@ public class Game_View {
 	private JButton NewGameButton = new JButton("New Game");
 	private JButton EndGameButton = new JButton("End Game");
 	private JButton HelpButton = new JButton("Help");
-	private ImageIcon centerCard = new ImageIcon("images/b.gif");
+	private ImageIcon centerCard = new ImageIcon();
+	private ImageIcon deck_left = new ImageIcon("images/deck_left.gif");
+	private ImageIcon deck_right = new ImageIcon("images/deck_right.gif");
+	private JLabel deck_left_label = new JLabel();
+	private JLabel deck_right_label = new JLabel();
 	private JPanel gamePanel = new JPanel(new BorderLayout());
 	
 	// creates the entire panel
 	protected Container CreateGUI() {
-		
-		//JPanel gamePanel = new JPanel(new BorderLayout());
-		
 		SetupTopPanel();
 		SetupLeftPanel();
 		SetupCenterPanel();
@@ -54,18 +55,29 @@ public class Game_View {
 
 	// actions
 	public void FlipCard(String imageFile) {
-		centerCard = new ImageIcon(imageFile);
-		CenterLabel.setIcon(centerCard);
-		LeadLabel.setText(imageFile);
+		this.centerCard = new ImageIcon(imageFile);
+		this.CenterLabel.setText("");
+		this.CenterLabel.setBorder(BorderFactory.createLineBorder(new Color(88,44,44), 8));
+		this.CenterLabel.setBackground(new Color(30,53,18));
+		this.CenterLabel.setOpaque(true);
+		this.CenterLabel.setIcon(centerCard);
+		this.LeadLabel.setText(imageFile);
 	}
 	
 	public void NewGameView() {
+		this.deck_left_label.setIcon(deck_left);
+		this.deck_right_label.setIcon(deck_right);
 		this.CenterLabel.setText("User1 goes first - press 'a' to flip a card.");
 	}
 	
 	public void EndGameView(String winner) {
 		this.CenterLabel.setIcon(null);
 		this.CenterLabel.setText(winner);
+	}
+	
+	public void SlapPile() {
+		this.centerCard = new ImageIcon("images/hand.gif");
+		this.CenterLabel.setIcon(centerCard);
 	}
 	
 	// listener classes
@@ -97,7 +109,7 @@ public class Game_View {
 			else if (e.getKeyChar() == 's') // user1 slaps pile (key: s)
 			{
 				User_1_SlapsPile();
-				centerCard = new ImageIcon("images/hand.gif");
+				SlapPile();
 			}
 			else if (e.getKeyChar() == ';') // user2 flips card (key: ;)
 			{
@@ -107,7 +119,7 @@ public class Game_View {
 			else if (e.getKeyChar() == '\'') // user2 slaps pile (key: ')
 			{
 				User_2_SlapsPile();
-				centerCard = new ImageIcon("images/hand.gif");
+				SlapPile();
 			}
 		}
 
@@ -183,12 +195,12 @@ public class Game_View {
 		user1Label.setForeground(Color.WHITE);
 		user1Label.setBorder(new EmptyBorder(10,0,0,0));
 		
-		ImageIcon deck_left = new ImageIcon("images/deck_left.gif");
+		
 		
 		//---
 		
 		LeftPanel.add(user1Label, BorderLayout.NORTH);
-		LeftPanel.add(new JLabel(deck_left), BorderLayout.CENTER);
+		LeftPanel.add(deck_left_label, BorderLayout.CENTER);
 	}
 	
 	void SetupCenterPanel() {
@@ -204,9 +216,11 @@ public class Game_View {
 		//CenterLabel.setIcon(centerCard);
 		CenterLabel.setText("Click the [New Game] button to begin!");
 		CenterLabel.setFont(new Font("HanziPen TC", Font.BOLD, 30));
-		CenterLabel.setForeground(Color.WHITE);
-		CenterLabel.setBorder(BorderFactory.createEtchedBorder(Color.WHITE, backGroundColor));
+		CenterLabel.setForeground(new Color(30,53,18));
+		CenterLabel.setBackground(Color.WHITE);
+		CenterLabel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 8));
 		CenterLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		CenterLabel.setOpaque(true);
 		
 		//---
 		CenterPanel.add(LeadLabel, BorderLayout.SOUTH);
@@ -224,12 +238,10 @@ public class Game_View {
 		user2Label.setForeground(Color.WHITE);
 		user2Label.setBorder(new EmptyBorder(10,0,0,0));
 		
-		ImageIcon deck_right = new ImageIcon("images/deck_right.gif");
-		
 		//---
 		
 		RightPanel.add(user2Label, BorderLayout.NORTH);
-		RightPanel.add(new JLabel(deck_right), BorderLayout.CENTER);
+		RightPanel.add(deck_right_label, BorderLayout.CENTER);
 	}
 	
 	void SetupBottomPanel() {

@@ -19,7 +19,6 @@ public class project3 {
 		
 		Container contents = gui.CreateGUI();
 		((JComponent) contents).setBorder(new EmptyBorder(6,6,6,6));
-		//contents.setFocusable(true);
 		frame.getContentPane().add(contents);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

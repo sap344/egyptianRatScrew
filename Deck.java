@@ -10,17 +10,18 @@ public class Deck {
 
     // properties
     private final List<Card> cards;
+    private int numCards;
     private int NumOfCards;
 
     // constructor
-    public Deck(int numOfCards) {
-    	if (numOfCards != 0)
+    public Deck(int num) {
+    	if (num != 0)
     	{
-    		NumOfCards = numOfCards - 1; // to account for the 0 in the beginning
+    		numCards = num - 1; // to account for the 0 in the beginning
 	    	this.cards = new ArrayList<Card>(52);
     		//this.cards = new Card[52];
 	    	// add 52 cards to the deck
-	    	if (NumOfCards == 51)
+	    	if (numCards == 51)
 	    	{
 		        for (int s=0; s<=3; s++)
 		        {
@@ -28,6 +29,7 @@ public class Deck {
 		            {
 		        	   Card addThisCard = new Card(s,r);
 		               this.cards.add(addThisCard);
+		               NumOfCards = NumOfCards + 1;
 		            }
 		        }
 	    	}
@@ -42,6 +44,7 @@ public class Deck {
     			this.cards.add(null);
     		}
     		
+    		numCards = 0;
     		NumOfCards = 0;
     	}
     }
@@ -59,6 +62,7 @@ public class Deck {
         // take the random card out of the deck
         Card drawThis = this.cards.get(index);
         this.cards.set(index, null);
+        numCards = numCards - 1;
         NumOfCards = NumOfCards - 1;
         return drawThis;
     }
@@ -74,23 +78,20 @@ public class Deck {
     	
     	// put the card back into a random place in the deck, where there was a null spot
     	this.cards.set(index, putThisInDeck);
+    	numCards = numCards + 1;
     	NumOfCards = NumOfCards + 1;
     }
     
 //    public void AddToNewDeck(Card addThisCard) {
 //    	this.cards.add(addThisCard);
-//    	NumOfCards = NumOfCards + 1;
+//    	numCards = numCards + 1;
 //    }
     
     public int GetNumberOfCardsInDeck() {
     	return NumOfCards;
     }
     
-    public int GetNumberOfCardsInDeck_arrayCount() {
-    	return cards.size();
+    public void ClearPile() {
+    	this.cards.clear();
     }
-    
-	void p(String printThis) {
-		System.out.println(printThis);
-	}
 }

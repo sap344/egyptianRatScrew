@@ -32,10 +32,13 @@ public class Game_View {
 	private ImageIcon deck_right = new ImageIcon("images/deck_right.gif");
 	private JLabel deck_left_label = new JLabel();
 	private JLabel deck_right_label = new JLabel();
+	private JLabel user1Label = new JLabel();
+	private JLabel user2Label = new JLabel();
 	private JPanel gamePanel = new JPanel(new BorderLayout());
 	
 	// creates the entire panel
 	protected Container CreateGUI() {
+		gamePanel.setFocusable(true);
 		SetupTopPanel();
 		SetupLeftPanel();
 		SetupCenterPanel();
@@ -48,6 +51,7 @@ public class Game_View {
 		gamePanel.add(RightPanel, BorderLayout.EAST);
 		gamePanel.add(BottomPanel, BorderLayout.SOUTH);
 		
+		gamePanel.setBackground(backGroundColor);
 		gamePanel.addKeyListener(new FrameKeyListener());
 		
 		return gamePanel;
@@ -60,7 +64,10 @@ public class Game_View {
 		this.CenterLabel.setBorder(BorderFactory.createLineBorder(new Color(88,44,44), 8));
 		this.CenterLabel.setBackground(new Color(30,53,18));
 		this.CenterLabel.setIcon(centerCard);
-		this.LeadLabel.setText(imageFile);
+		this.user1Label.setText("User1: " + user1Pile.GetNumberOfCardsInDeck());
+		this.user2Label.setText("User2: " + user2Pile.GetNumberOfCardsInDeck());
+		this.LeadLabel.setFont(new Font("HanziPen TC", Font.BOLD, 20));
+		this.LeadLabel.setText(whoIsLeading());
 	}
 	
 	public void NewGameView() {
@@ -100,13 +107,47 @@ public class Game_View {
 		}
 	 }
 	 
+	 public class HelpListener implements ActionListener{
+		 public void actionPerformed(ActionEvent e) {
+			 String howTo = String.format("%s\n%s\n%s\n\t%s\n\t%s\n\t%s\n\t%s\n\t\t%s\n\t\t%s\n\n%s\n%ss ", 
+						"This application provides any user with a fun and exciting card game! Two players can play at a time on 1 keyboard.",
+						"Each player just needs to use 2 keys - one for flipping over a card from their stack, and the other for slapping the pile in the middle.",
+						"The point of the game is to get all the cards in the deck by slapping the middle pile. The rules are as follows:",
+						"• The game begins user 1 flipping over the first card, the user keeps flipping until he/she flips over an Ace, King, Queen, or a Jack (A/K/Q/J).",
+						"• Let’s say User1 flips over an A,then User2 has 4flips/chances to flip over another A/K/Q/J. If User2 flips over a Q in their second chance, then the turn moves to User1, who now has 2 chances to get an A/K/Q/J. This goes back an forth.",
+						"• Once a user takes up all the chances he/she has for that turn and still has not flipped over an A/K/Q/J, then the other user gets the middle pile.",
+						"• The fun part of the game are the two slapping rules, where you can slap the pile to take it if one of these rules are followed:",
+						"– Double: when two of the same value cards (ex. 5, 5) are flipped over consecutively",
+						"– Sandwich: when two two cards of equivalent value are laid down consecutively, but with one card of different value between them (ex. 4,7,4)",
+						"The user1 keys are as follows: flip = ‘a’ | slap = ’s’",
+						"The user2 keys are as follows: flip = ‘;’ | slap = ‘’’");
+			 JTextArea jta = new JTextArea(howTo);
+			 jta.setEditable(false);
+	         JScrollPane jsp = new JScrollPane(jta);
+	         jsp.setPreferredSize(new Dimension(1200, 300));
+			 JOptionPane.showMessageDialog(gamePanel,
+					    jsp,
+					    "How To Play",
+					    JOptionPane.PLAIN_MESSAGE);
+
+		}
+	 }
+	 
 	 public class FrameKeyListener implements KeyListener{
 			
 		public void keyTyped(KeyEvent e) {
 			if (e.getKeyChar() == 'a') // user1 flips card (key: a)
 			{
-				Card flippedCard = User_1_FlipsCard();
-				FlipCard(flippedCard.getCardImageFile());
+				if (CurrentPlayer.equals("user1"))
+				{
+					Card flippedCard = User_1_FlipsCard();
+					FlipCard(flippedCard.getCardImageFile());
+					CheckFlippedCardAndUpdateTurns(flippedCard);
+				}
+				else
+				{
+					LeadLabel.setText("Not your turn User1!");
+				}
 			}
 			else if (e.getKeyChar() == 's') // user1 slaps pile (key: s)
 			{
@@ -115,13 +156,25 @@ public class Game_View {
 			}
 			else if (e.getKeyChar() == ';') // user2 flips card (key: ;)
 			{
-				Card flippedCard = User_2_FlipsCard();
-				FlipCard(flippedCard.getCardImageFile());
+				if (CurrentPlayer.equals("user2"))
+				{
+					Card flippedCard = User_2_FlipsCard();
+					FlipCard(flippedCard.getCardImageFile());
+					CheckFlippedCardAndUpdateTurns(flippedCard);
+				}
+				else
+				{
+					LeadLabel.setText("Not your turn User2!");
+				}
 			}
 			else if (e.getKeyChar() == '\'') // user2 slaps pile (key: ')
 			{
 				User_2_SlapsPile();
 				SlapPile();
+			}
+			else
+			{
+				// do nothing
 			}
 		}
 
@@ -192,7 +245,7 @@ public class Game_View {
 		LeftPanel.setBorder(new EmptyBorder(0,150,0,50));
 		
 		//---
-		JLabel user1Label = new JLabel("User 1");
+		user1Label.setText("User1");
 		user1Label.setFont(new Font("HanziPen TC", Font.BOLD, 40));
 		user1Label.setForeground(Color.WHITE);
 		user1Label.setBorder(new EmptyBorder(10,0,0,0));
@@ -233,7 +286,7 @@ public class Game_View {
 		RightPanel.setBorder(new EmptyBorder(0,50,0,150));
 		
 		//---
-		JLabel user2Label = new JLabel("User 2");
+		user2Label.setText("User2");
 		user2Label.setFont(new Font("HanziPen TC", Font.BOLD, 40));
 		user2Label.setForeground(Color.WHITE);
 		user2Label.setBorder(new EmptyBorder(10,0,0,0));
@@ -255,6 +308,7 @@ public class Game_View {
 		HelpButton.setPreferredSize(new Dimension(70,40));
 		HelpButton.setFont(new Font("HanziPen TC", Font.BOLD, 15));
 		HelpButton.setForeground(new Color(40,102,10));
+		HelpButton.addActionListener(new HelpListener());
 		helpPanel.add(HelpButton);
 
 		//---
@@ -276,7 +330,10 @@ public class Game_View {
 		private static Deck middlePile = new Deck(52);
 		private static Deck user1Pile = new Deck(0);
 		private static Deck user2Pile = new Deck(0);
-		private static List<Card> slapRuleTracker = new ArrayList<Card>();
+		private static List<Card> CardTracker = new ArrayList<Card>();
+		private static int NumOfTurns;
+		private static String CurrentPlayer;
+		private static boolean isFirstTurn;
 		
 		
 		public void StartGame() {
@@ -295,19 +352,111 @@ public class Game_View {
 				//user2Pile.AddToNewDeck(c);
 				user2Pile.PutCardInDeck(c);
 			}
+			
+			// user1 always goes first
+			CurrentPlayer = "user1";
+			isFirstTurn = true;
 		}
 		
 		// methods
 		public Card User_1_FlipsCard() {
 			Card flippedCard = user1Pile.DrawCardFromDeck();
 			middlePile.PutCardInDeck(flippedCard);
+			CardTracker.add(flippedCard);
 			return flippedCard;
 		}
 		
 		public Card User_2_FlipsCard() {
 			Card flippedCard = user2Pile.DrawCardFromDeck();
 			middlePile.PutCardInDeck(flippedCard);
+			CardTracker.add(flippedCard);
 			return flippedCard;
+		}
+		
+		public void CheckFlippedCardAndUpdateTurns(Card flippedCard) {
+			int rank = flippedCard.getRank();
+			if (isFirstTurn && (rank != 0 || rank != 12 || rank != 11 || rank != 10))
+			{
+				SwitchPlayers();
+				isFirstTurn = false;
+			}
+			else
+			{
+				isFirstTurn = false;
+				if (rank == 0)
+				{
+					// if card is an Ace
+					NumOfTurns = 4;
+					SwitchPlayers();
+				}
+				else if (rank == 12)
+				{
+					// if card is a King
+					NumOfTurns = 3;
+					SwitchPlayers();
+				}
+				else if (rank == 11)
+				{
+					// if card is a Queen
+					NumOfTurns = 2;
+					SwitchPlayers();
+				}
+				else if (rank == 10)
+				{
+					// if card is a Jack
+					NumOfTurns = 1;
+					SwitchPlayers();
+				}
+				else
+				{
+					// if some other card
+					NumOfTurns = NumOfTurns - 1;
+				}
+				
+				// if out of turns
+				if (NumOfTurns == 0)
+				{
+					if (CurrentPlayer == "user1") // then user2 gets the pile
+					{
+						for (int i = 0; i < middlePile.GetNumberOfCardsInDeck() + 1; i++)
+						{
+							Card c = middlePile.DrawCardFromDeck();
+							user2Pile.PutCardInDeck(c);
+						}
+						
+						LeadLabel.setFont(new Font("HanziPen TC", Font.BOLD, 10));
+						LeadLabel.setText("You're out of turns - User 2 gets the pile!");
+						CurrentPlayer = "user2";
+					}
+					else // if currentPlayer = user 2, then user 1 gets the pile
+					{
+						for (int i = 0; i < middlePile.GetNumberOfCardsInDeck() + 1; i++)
+						{
+							Card c = middlePile.DrawCardFromDeck();
+							user1Pile.PutCardInDeck(c);
+						}
+						
+						LeadLabel.setFont(new Font("HanziPen TC", Font.BOLD, 10));
+						LeadLabel.setText("You're out of turns - User 1 gets the pile!");
+						CurrentPlayer = "user1";
+					}
+					
+					//middlePile.ClearPile();
+					CardTracker.clear();
+				}
+			}
+		}
+		
+		public void SwitchPlayers() {
+			String player = CurrentPlayer;
+			if (player.equals("user1"))
+			{
+				CurrentPlayer = "user2";
+			}
+			else
+			{
+				CurrentPlayer = "user1";
+			}
 		}
 		
 		public void User_1_SlapsPile() {
@@ -316,27 +465,32 @@ public class Game_View {
 			if (checkSlapRule())
 			{
 				int total = middlePile.GetNumberOfCardsInDeck();
-				p("middlePile: " + total);
-				p("user1 before: " + user1Pile.GetNumberOfCardsInDeck());
-				int n = 0;
-				for (; n <= total; n++)
+				for (int n = 0; n < total; n++)
 				{
 					Card c = middlePile.DrawCardFromDeck();
 					user1Pile.PutCardInDeck(c);
 				}
 				
-				p("user1 #of cards: " + user1Pile.GetNumberOfCardsInDeck());
+				LeadLabel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+				LeadLabel.setText("user1 takes the pile!");
+				CurrentPlayer = "user1";
 			}
 			else
 			{
 				int total = middlePile.GetNumberOfCardsInDeck();
-				int n = 0;
-				for (; n <= total; n++)
+				for (int n = 0; n < total; n++)
 				{
 					Card c = middlePile.DrawCardFromDeck();
 					user2Pile.PutCardInDeck(c);
 				}
+				
+				LeadLabel.setFont(new Font("HanziPen TC", Font.BOLD, 10));
+				LeadLabel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+				LeadLabel.setText("Sorry - invalid Slap --> user2 takes the pile!");
+				CurrentPlayer = "user2";
 			}
+			
+			CardTracker.clear();
 		}
 		
 		public void User_2_SlapsPile() {
@@ -345,23 +499,34 @@ public class Game_View {
 			if (checkSlapRule())
 			{
 				int total = middlePile.GetNumberOfCardsInDeck();
-				int n = 0;
-				for (; n <= total; n++)
+				
+				for (int n = 0; n < total; n++)
 				{
 					Card c = middlePile.DrawCardFromDeck();
 					user2Pile.PutCardInDeck(c);
 				}
+				
+				LeadLabel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+				LeadLabel.setText("user2 takes the pile!");
+				CurrentPlayer = "user2";
 			}
 			else
 			{
 				int total = middlePile.GetNumberOfCardsInDeck();
-				int n = 0;
-				for (; n <= total; n++)
+				
+				for (int n = 0; n < total; n++)
 				{
 					Card c = middlePile.DrawCardFromDeck();
 					user1Pile.PutCardInDeck(c);
 				}
+				
+				LeadLabel.setFont(new Font("HanziPen TC", Font.BOLD, 10));
+				LeadLabel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+				LeadLabel.setText("Sorry - invalid Slap --> user1 takes the pile!");
+				CurrentPlayer = "user1";
 			}
+			
+			CardTracker.clear();
 		}
 		
 		public void NewGame() {
@@ -395,14 +560,55 @@ public class Game_View {
 		
 		private boolean checkSlapRule() {
 			boolean isSlapperValid = false; // give the slapper the middle pile
-
+			int num = middlePile.GetNumberOfCardsInDeck();
+			p("middlePile num: " + num);
+			p("cardTracker: " + CardTracker.size());
+			
+			if (num >= 2)
+			{
+				Card a = CardTracker.get(num-1);
+				Card b = CardTracker.get(num-2);
+				
+				if (a.getRank() == b.getRank())
+				{
+					isSlapperValid = true;
+				}
+				else if (num >= 3)
+				{
+					Card c = CardTracker.get(num-3);
+					if (a.getRank() == c.getRank())
+					{
+						isSlapperValid = true;
+					}
+				}
+				else
+				{
+					isSlapperValid = false;
+				}
+			}
+			
 			return isSlapperValid;
 		}
 		
-		private int calculatePoints(Deck countThisPile) {
-			int points = 0;
+		private String whoIsLeading() {
+			String lead = "";
+			int user1Pts = user1Pile.GetNumberOfCardsInDeck();
+			int user2Pts = user2Pile.GetNumberOfCardsInDeck();
 			
-			return points;
+			if (user1Pts > user2Pts)
+			{
+				lead = "User1 is leading!";
+			}
+			else if (user1Pts < user2Pts)
+			{
+				lead = "User2 is leading!";
+			}
+			else
+			{
+				lead = "Both users are tied currently!";
+			}
+			
+			return lead;
 		}
 		
 		private void p(String print) {

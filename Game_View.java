@@ -59,7 +59,6 @@ public class Game_View {
 		this.CenterLabel.setText("");
 		this.CenterLabel.setBorder(BorderFactory.createLineBorder(new Color(88,44,44), 8));
 		this.CenterLabel.setBackground(new Color(30,53,18));
-		this.CenterLabel.setOpaque(true);
 		this.CenterLabel.setIcon(centerCard);
 		this.LeadLabel.setText(imageFile);
 	}
@@ -67,11 +66,14 @@ public class Game_View {
 	public void NewGameView() {
 		this.deck_left_label.setIcon(deck_left);
 		this.deck_right_label.setIcon(deck_right);
+		this.CenterLabel.setForeground(new Color(30,53,18));
+		this.CenterLabel.setBackground(Color.WHITE);
 		this.CenterLabel.setText("User1 goes first - press 'a' to flip a card.");
 	}
 	
 	public void EndGameView(String winner) {
 		this.CenterLabel.setIcon(null);
+		this.CenterLabel.setForeground(Color.WHITE);
 		this.CenterLabel.setText(winner);
 	}
 	
@@ -194,8 +196,6 @@ public class Game_View {
 		user1Label.setFont(new Font("HanziPen TC", Font.BOLD, 40));
 		user1Label.setForeground(Color.WHITE);
 		user1Label.setBorder(new EmptyBorder(10,0,0,0));
-		
-		
 		
 		//---
 		
@@ -330,16 +330,12 @@ public class Game_View {
 			else
 			{
 				int total = middlePile.GetNumberOfCardsInDeck();
-				p("middlePile: " + total);
-				p("user2 before: " + user2Pile.GetNumberOfCardsInDeck());
 				int n = 0;
 				for (; n <= total; n++)
 				{
 					Card c = middlePile.DrawCardFromDeck();
 					user2Pile.PutCardInDeck(c);
 				}
-				
-				p("user2 #of cards: " + user2Pile.GetNumberOfCardsInDeck());
 			}
 		}
 		
@@ -378,8 +374,8 @@ public class Game_View {
 		
 		public String EndGame() {
 			String winner = "";
-			int user1Pts = calculatePoints(user1Pile);
-			int user2Pts = calculatePoints(user2Pile);
+			int user1Pts = user1Pile.GetNumberOfCardsInDeck();
+			int user2Pts = user2Pile.GetNumberOfCardsInDeck();
 			
 			if (user1Pts > user2Pts)
 			{

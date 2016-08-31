@@ -1,3 +1,9 @@
+import java.awt.Color;
+import java.awt.Container;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 /*
 * Shreya Patel
 * sap344@drexel.edu
@@ -7,10 +13,16 @@
 public class project3 {
 	
 	public static void main(String[] args) {
-		CardGame_View view = new CardGame_View();
-		Game model = new Game();
-		CardGame_ViewController viewController = new CardGame_ViewController(view,model);
+		JFrame frame = new JFrame("EgyptianRatScrew-ShreyaPatel-CS338");
+		frame.setSize(1200, 700);
+		Game_View gui = new Game_View();
 		
-		view.setVisible(true);
+		Container contents = gui.CreateGUI();
+		((JComponent) contents).setBorder(new EmptyBorder(6,6,6,6));
+		contents.setFocusable(true);
+		frame.getContentPane().add(contents);
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }

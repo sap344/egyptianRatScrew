@@ -18,6 +18,7 @@ public class Deck {
     	{
     		NumOfCards = numOfCards - 1; // to account for the 0 in the beginning
 	    	this.cards = new ArrayList<Card>(52);
+    		//this.cards = new Card[52];
 	    	// add 52 cards to the deck
 	    	if (NumOfCards == 51)
 	    	{
@@ -35,6 +36,12 @@ public class Deck {
     	{
     		// start an empty deck
     		this.cards = new ArrayList<Card>(52);
+    		int i;
+    		for (i = 0; i < 52; i++)
+    		{
+    			this.cards.add(null);
+    		}
+    		
     		NumOfCards = 0;
     	}
     }
@@ -46,7 +53,7 @@ public class Deck {
         int index=0;
         
         do {
-            index = random.nextInt(NumOfCards);
+            index = random.nextInt(52);
         } while (this.cards.get(index) == null);
 
         // take the random card out of the deck
@@ -56,12 +63,13 @@ public class Deck {
         return drawThis;
     }
     
+    
     public void PutCardInDeck(Card putThisInDeck) {
     	Random random = new Random();
     	int index = 0;
     	
     	do {
-    		index = random.nextInt(this.GetNumberOfCardsInDeck_arrayCount());
+    		index = random.nextInt(52);
     	} while(cards.get(index) != null);
     	
     	// put the card back into a random place in the deck, where there was a null spot
@@ -69,10 +77,10 @@ public class Deck {
     	NumOfCards = NumOfCards + 1;
     }
     
-    public void AddToNewDeck(Card addThisCard) {
-    	this.cards.add(addThisCard);
-    	NumOfCards = NumOfCards + 1;
-    }
+//    public void AddToNewDeck(Card addThisCard) {
+//    	this.cards.add(addThisCard);
+//    	NumOfCards = NumOfCards + 1;
+//    }
     
     public int GetNumberOfCardsInDeck() {
     	return NumOfCards;

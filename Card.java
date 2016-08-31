@@ -43,17 +43,31 @@ public final class Card {
 	}
 	
 	public String getCardImageFile() {
-		String cardKey = String.valueOf(this.Rank);
+		String cardKey = "";
+		
+		switch(this.Rank) {
+			case 0  : cardKey = "a";
+					  break;
+			case 10 : cardKey = "j";
+					  break;
+			case 11 : cardKey = "q";
+					  break;
+			case 12 : cardKey = "k";
+					  break;
+			default : cardKey = String.valueOf(this.Rank + 1);
+					  break;
+		}
+		
 		switch(this.Suit) {
-			case 0 : cardKey.concat("s.gif");
+			case 0 : cardKey = "images/" + cardKey + "s.gif";
 					 break;
-			case 1 : cardKey.concat("c.gif");
+			case 1 : cardKey = "images/" + cardKey + "c.gif";
 					 break;
-			case 2 : cardKey.concat("d.gif");
+			case 2 : cardKey = "images/" + cardKey + "d.gif";
 					 break;
-			case 3 : cardKey.concat("h.gif");
+			case 3 : cardKey = "images/" + cardKey + "h.gif";
 					 break;
-			default : cardKey = "b.gif";
+			default : cardKey = "images/b.gif";
 					  break;
 		}
 		
